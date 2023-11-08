@@ -1,5 +1,6 @@
 import user from './user.js';
-import auth from './auth.js'
+import auth from './auth.js';
+import refreshToken from './refreshToken.js'
 export default function route(app){
     app.use(function(req, res, next) {
         res.header(
@@ -9,5 +10,6 @@ export default function route(app){
         next();
       });
       app.use('/user',user );
-      app.use('/auth', auth)
+      app.use('/auth', auth);
+      app.use('/refresh-token', refreshToken)
 }

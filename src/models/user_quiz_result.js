@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     score: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'UserQuizResult',
+    modelName: 'user_quiz_result',
+    timestamps: false
   });
   return UserQuizResult;
 };

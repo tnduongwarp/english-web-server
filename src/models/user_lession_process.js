@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     conpletedStatus: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'UserLessionProcess',
+    modelName: 'user_lesson_process',
+    timestamps: false
   });
   return UserLessonProcess;
 };
