@@ -8,6 +8,12 @@ import {
 } from "../utils/validationSchema.js";
 import { refreshTokenBodyValidation } from '../utils/validationSchema.js';
 import { Sequelize } from 'sequelize';
+import { OAuth2Client } from 'google-auth-library';
+import dotenv from 'dotenv'
+dotenv.config();
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+console.log(process.env.GOOGLE_CLIENT_ID)
+console.log(process.env.SALT)
 const authCtl = {
     login: async (req, res) => {
         try {
@@ -73,7 +79,7 @@ const authCtl = {
 
             await db.User.create({
                 username: req.body.username,
-                password: bcrypt.hashSync(req.body?.password, salt),
+                password: bcrypt.hashSync(hashPassword, salt),
                 email: req.body.email,
                 registration_date: new Date(),
                 profile_picture: req.body?.profile_picture,
@@ -113,6 +119,52 @@ const authCtl = {
             console.log(err);
             res.status(500).json({ error: true, message: "Internal Server Error" });
         }
+    },
+
+    handleGoogleLogin: async (req,res) => {
+        const {token} = req.body
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+        });
+        console.log(ticket.getPayload())
+        const googleData = ticket.getPayload();
+        const user = await db.User.findOne({
+            where: {
+                     email:googleData.email 
+            }
+        });
+        if(user){
+            const { accessToken, refreshToken } = await generateTokens(user);
+
+                res.status(200).json({
+                    error: false,
+                    message: 'Login successfully!',
+                    user,
+                    accessToken,
+                    refreshToken
+                });
+        }else{
+            const salt = await bcrypt.genSalt(Number(process.env.SALT));
+            const hashPassword = await bcrypt.hash(googleData.sub, salt);
+
+            const newUser = await db.User.create({
+                username: googleData.username,
+                password: bcrypt.hashSync(hashPassword, salt),
+                email: googleData.email,
+                registration_date: new Date(),
+                profile_picture: googleData.picture,
+                role: 'user'
+            });
+            const { accessToken, refreshToken } = await generateTokens(newUser);
+            res.status(200).json({
+                error: false,
+                message: 'Login successfully!',
+                newUser,
+                accessToken,
+                refreshToken
+            });
+        }
+        
     }
 }
 export default authCtl;
