@@ -159,7 +159,7 @@ const authCtl = {
             res.status(200).json({
                 error: false,
                 message: 'Login successfully!',
-                newUser,
+                user: newUser,
                 accessToken,
                 refreshToken
             });
