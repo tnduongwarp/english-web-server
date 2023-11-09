@@ -12,8 +12,6 @@ import { OAuth2Client } from 'google-auth-library';
 import dotenv from 'dotenv'
 dotenv.config();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-console.log(process.env.GOOGLE_CLIENT_ID)
-console.log(process.env.SALT)
 const authCtl = {
     login: async (req, res) => {
         try {
@@ -28,6 +26,9 @@ const authCtl = {
                     username: req.body.username
                 }
             });
+            console.log(user)
+            let a = await bcrypt.compare(req.body.password, user.password);
+            console.log(a)
             if (user && (await bcrypt.compare(req.body.password, user.password))) {
                 const { accessToken, refreshToken } = await generateTokens(user);
 
@@ -75,11 +76,9 @@ const authCtl = {
                     .json({ error: true, message: "User with given email already exist" });
 
             const salt = await bcrypt.genSalt(Number(process.env.SALT));
-            const hashPassword = await bcrypt.hash(req.body.password, salt);
-
             await db.User.create({
                 username: req.body.username,
-                password: bcrypt.hashSync(hashPassword, salt),
+                password: bcrypt.hashSync(req.body.password, salt),
                 email: req.body.email,
                 registration_date: new Date(),
                 profile_picture: req.body?.profile_picture,
@@ -145,11 +144,9 @@ const authCtl = {
                 });
         }else{
             const salt = await bcrypt.genSalt(Number(process.env.SALT));
-            const hashPassword = await bcrypt.hash(googleData.sub, salt);
-
             const newUser = await db.User.create({
                 username: googleData.username,
-                password: bcrypt.hashSync(hashPassword, salt),
+                password: bcrypt.hashSync(googleData.sub, salt),
                 email: googleData.email,
                 registration_date: new Date(),
                 profile_picture: googleData.picture,
