@@ -12,7 +12,6 @@ router.post("/", async (req, res) => {
                 .json({ error: true, message: error.details[0].message });
     
         const {tokenDetails} = await verifyRefreshToken(req.body.refreshToken);
-        console.log(tokenDetails);
         if(tokenDetails){
             const payload = { id: tokenDetails.id, roles: tokenDetails.role };
             const accessToken = jwt.sign(
@@ -30,8 +29,11 @@ router.post("/", async (req, res) => {
             message: "Invalid RefreshToken"
         })  
     } catch(err){
-        console.log(err)
-        res.status(400).json(err)
+        // console.log(err)
+        res.status(400).json({
+            error: true,
+            message: err?.message?.message
+        })
     }
    
 });
