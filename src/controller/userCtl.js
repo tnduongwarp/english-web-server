@@ -52,9 +52,9 @@ let userCtl = {
             }
             
         }catch(err){
-            res.status(400).json({
+            res.status(401).json({
                 error: true,
-                message: 'invalid token'
+                message: 'token is expired'
             })
         }
         
