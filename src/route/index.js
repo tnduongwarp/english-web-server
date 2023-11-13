@@ -1,7 +1,8 @@
 import user from './user.js';
 import auth from './auth.js';
 import refreshToken from './refreshToken.js';
-import forgotPassWord from './forgot-pw.js'
+import forgotPassWord from './forgot-pw.js';
+import category from './category.js'
 export default function route(app){
     app.use(function(req, res, next) {
         res.header(
@@ -13,5 +14,6 @@ export default function route(app){
       app.use('/user',user );
       app.use('/auth', auth);
       app.use('/refresh-token', refreshToken);
-      app.use('/forgot-pw', forgotPassWord)
+      app.use('/forgot-pw', forgotPassWord);
+      app.use('/category',category)
 }

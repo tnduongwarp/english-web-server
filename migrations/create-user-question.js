@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user_quiz_results', {
+    await queryInterface.createTable('user_questions', {
 
       id: {
         allowNull: false,
@@ -16,16 +16,22 @@ module.exports = {
       quizId: {
         type: Sequelize.INTEGER
       },
-      score: {
+      questionId: {
+        type: Sequelize.INTEGER
+      },
+      userAnswer: {
         type: Sequelize.STRING
       },
-      completedDate: {
+      dateCompleted: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      isCorrect: {
+        type: Sequelize.BOOLEAN
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('user_quiz_results');
+    await queryInterface.dropTable('user_questions');
   }
 };
