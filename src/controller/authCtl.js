@@ -28,7 +28,6 @@ const authCtl = {
                     username: req.body.username
                 }
             });
-            let a = await bcrypt.compare(req.body.password, user.password);
             if (user && (await bcrypt.compare(req.body.password, user.password))) {
                 const { accessToken, refreshToken } = await generateTokens(user);
 
