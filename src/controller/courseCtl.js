@@ -6,7 +6,7 @@ class CourseCtl extends BaseController{
     }
     getByCategoryId = async (req,res) => {
         try {
-            const { id } = req.body;
+            const  id  = req.params.id;
             const data = await this.modelName.findAll({
                 where: {
                     categoryId: id
