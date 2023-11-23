@@ -45,5 +45,42 @@ class LessonCtl extends BaseController{
             })
         }
     }
+
+    updateUserLessonStatus = async (req, res) => {
+        try{
+            const { status, updateAt, lessonId, userId} = req.body;
+            if(status === AppConstant.COMPLETE_STATUS || status ===AppConstant.INPROGRESS_STATUS ){
+                let dataUpdate = await db.user_lesson_process.update(
+                    { 
+                        completedStatus: status,
+                        completedDate: updateAt
+                    },
+                    {
+                        where: {
+                            userId: userId,
+                            lessonId: lessonId
+                        }
+                    }
+                );
+                res.status(200).json({
+                    error: false,
+                    message: 'update successfully',
+                    user_lesson_process: dataUpdate
+                })
+            }
+            else res.status(400).json({
+                error: true,
+                message: "Invalid Status"
+            })
+
+        }catch(err){
+            res.status(500).json({
+                error: true,
+                message: err.message
+            })
+        }
+        
+
+    }
 }
 module.exports = new LessonCtl();
