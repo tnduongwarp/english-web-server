@@ -10,7 +10,7 @@ export default class BaseController {
         return res.status(200).json({
           error: false,
           message: 'get all success',
-            ata: data
+          data: data
       });
     } catch (error) {
       console.log(error)

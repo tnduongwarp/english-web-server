@@ -1,6 +1,7 @@
 import BaseController from "./baseCtl";
 import db from '../models';
 import { AppConstant } from "../AppConstant";
+import { Op } from "sequelize";
 class LessonCtl extends BaseController{
     constructor(){
         super(db.Lesson)
@@ -81,6 +82,32 @@ class LessonCtl extends BaseController{
         }
         
 
+    }
+    getQuizForLessonByLessonId = async (req, res) => {
+        try {
+            const lessonId = req.params.id;
+            const quiz = await db.Quiz.findOne({
+                where: {lessonId: lessonId}
+            });
+            let questionIds = quiz.questionIds.split(',');
+            const questions = await db.Question.findAll({
+                where: {
+                    id: {
+                        [Op.in]: questionIds
+                    }
+                }
+            })
+            res.status(200).json({
+                error: false,
+                data: questions,
+                message: 'Get successfully'
+            })
+        } catch (error) {
+            res.status(500).json({
+                error: true,
+                message: err.message
+            })
+        }
     }
 }
 module.exports = new LessonCtl();

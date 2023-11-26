@@ -15,7 +15,7 @@ export default function route(app){
       });
       app.use('/user',user );
       app.use('/auth', auth);
-      app.use('/refresh-token', refreshToken);
+      app.use('/auth/refresh-token', refreshToken);
       app.use('/forgot-pw', forgotPassWord);
       app.use('/category',category);
       app.use('/lesson', lesson);

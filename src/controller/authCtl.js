@@ -87,6 +87,7 @@ const authCtl = {
                 .status(201)
                 .json({ error: false, message: "Account created sucessfully" });
         } catch (err) {
+            console.log(err)
             res.status(500).json({ error: true, message: "Internal Server Error" });
         }
     },

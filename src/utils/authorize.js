@@ -6,7 +6,7 @@ const config = process.env;
 const verifyToken = (req, res, next) => {
     let token = req.header('authorization')?.split(' ')[1];
     if (!token) {
-        return res.status(403).json({
+        return res.status(401).json({
             error: true,
             message: "A token is required for authentication"
         });
@@ -24,7 +24,6 @@ const verifyToken = (req, res, next) => {
     return next();
 };
 const isUser = (req, res, next) => {
-
 
     if (req.user.role === "user") {
         next();
