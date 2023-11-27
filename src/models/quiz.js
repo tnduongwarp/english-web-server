@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Quiz.init({
-    courseId: DataTypes.INTEGER,
+    lessonId: DataTypes.INTEGER,
     name: DataTypes.STRING,
     questionIds: DataTypes.STRING,
     

@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
     
         const {tokenDetails} = await verifyRefreshToken(req.body.refreshToken);
         if(tokenDetails){
-            const payload = { id: tokenDetails.id, roles: tokenDetails.role };
+            const payload = { userId: tokenDetails.userId, role: tokenDetails.role };
             const accessToken = jwt.sign(
                 payload,
                 process.env.TOKEN_KEY,
