@@ -9,7 +9,9 @@ import {
 import { refreshTokenBodyValidation } from '../utils/validationSchema.js';
 import { Sequelize } from 'sequelize';
 import { OAuth2Client } from 'google-auth-library';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
+import sendEmail from '../utils/sendOTPEmail.js';
+import generateChangePwToken from '../utils/generateChangePwToken.js';
 dotenv.config();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const authCtl = {
@@ -26,9 +28,6 @@ const authCtl = {
                     username: req.body.username
                 }
             });
-            console.log(user)
-            let a = await bcrypt.compare(req.body.password, user.password);
-            console.log(a)
             if (user && (await bcrypt.compare(req.body.password, user.password))) {
                 const { accessToken, refreshToken } = await generateTokens(user);
 
@@ -45,7 +44,6 @@ const authCtl = {
                 message: 'Invalid creditials!'
             });
         } catch (err) {
-            console.log(err);
             res.status(500).json({ error: true, message: "Internal Server Error" });
         }
     },
@@ -89,7 +87,6 @@ const authCtl = {
                 .status(201)
                 .json({ error: false, message: "Account created sucessfully" });
         } catch (err) {
-            console.log(err);
             res.status(500).json({ error: true, message: "Internal Server Error" });
         }
     },
@@ -115,7 +112,6 @@ const authCtl = {
             });
             res.status(200).json({ error: false, message: "Logged Out Sucessfully" });
         } catch (err) {
-            console.log(err);
             res.status(500).json({ error: true, message: "Internal Server Error" });
         }
     },
@@ -125,7 +121,6 @@ const authCtl = {
         const ticket = await client.verifyIdToken({
             idToken: token,
         });
-        console.log(ticket.getPayload())
         const googleData = ticket.getPayload();
         const user = await db.User.findOne({
             where: {
@@ -162,6 +157,43 @@ const authCtl = {
             });
         }
         
+    },
+    sendOTPEmail: async (req, res) => {
+        const { recipient_email} = req.body;
+        if(!recipient_email) res.status(400).json({error: true, message: "email is require!"});
+        const user = await db.User.findOne({where:{ email: recipient_email}});
+        if(!user) res.status(400).json({error: true, message:"email is incorrect!"})
+        else
+        sendEmail(req.body)
+          .then((response) => res.status(200).json({
+            error: false,
+            message: response.message
+          }))
+          .catch((error) => res.status(500).send({
+            error: true,
+            message: error.message
+          }));
+    },
+
+    sendChangePwToken: async (req,res) => {
+        const {email} = req.body;
+        if(!email) res.status(400).json({error: true, message:"email is required!"})
+        else {
+            generateChangePwToken(email)
+            .then((response) => {
+                res.status(200).json({
+                    error: false,
+                    message: 'success',
+                    token: response.changePasswordToken
+                })
+            })
+            .catch(err => {
+                res.status(500).json({
+                    error: true,
+                    message: err.message
+                })
+            })
+        }
     }
 }
 export default authCtl;
