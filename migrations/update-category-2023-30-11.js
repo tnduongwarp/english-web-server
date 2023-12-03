@@ -15,10 +15,7 @@ module.exports = {
       },
       isActive: {
         type: Sequelize.STRING
-      },
-      isActive: {
-        type: Sequelize.STRING
-      },
+      }
     });
   },
   async down(queryInterface, Sequelize) {
