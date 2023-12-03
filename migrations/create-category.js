@@ -12,6 +12,9 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING
+      },
+      isActive: {
+        type: Sequelize.STRING
       }
     });
   },
