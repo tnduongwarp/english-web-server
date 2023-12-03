@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Word.init({
-   audioUrl: DataTypes.STRING,
+   pronunciation: DataTypes.STRING,
    original: DataTypes.STRING,
    meaning: DataTypes.STRING
   }, {
