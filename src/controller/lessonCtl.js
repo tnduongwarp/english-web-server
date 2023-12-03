@@ -8,10 +8,10 @@ class LessonCtl extends BaseController{
     }
     getByCourseId = async (req,res) => {
         try {
-            const { lessonId, userId}  = req.body;
+            const { courseId, userId}  = req.body;
             const allLessons = await this.modelName.findAll({
                 where: {
-                    courseId: lessonId
+                    courseId: courseId
                 }
             });
             let allPromise = [];
@@ -24,21 +24,28 @@ class LessonCtl extends BaseController{
                 });
                 allPromise.push(user_lesson_process);
             }
-            Promise.all(allPromise).then((values) => {
-                const completed = values.filter((it) => {return it.completedStatus === AppConstant.COMPLETE_STATUS});
-                const inprogress = values.filter((it) => {return it.completedStatus === AppConstant.INPROGRESS_STATUS});
-                const upcoming = values.filter((it) => {return it.completedStatus === AppConstant.NEW_STATUS});
+            let lessonPromises = [];
+            await Promise.all(allPromise).then((values) => {
+                const completed = values.filter((it) => {return it?.completedStatus === AppConstant.COMPLETE_STATUS}).map(item => item.lessonId);
+                const inprogress = values.filter((it) => {return it?.completedStatus === AppConstant.INPROGRESS_STATUS}).map(item => item.lessonId);
+                const upcoming = values.filter((it) => {return it?.completedStatus === AppConstant.NEW_STATUS}).map(item => item.lessonId);
+                console.log(upcoming)
+                lessonPromises.push(db.Lesson.findAll({ where: { id: completed}}));
+                lessonPromises.push(db.Lesson.findAll({ where: { id: inprogress}}));
+                lessonPromises.push(db.Lesson.findAll({ where: { id: upcoming}}));
+                    
+            })
+            Promise.all(lessonPromises).then(values => {
                 res.status(200).json({
                     error: false,
                     mesage: 'get by categoryId successfully',
                     lessons: {
-                        completed: completed,
-                        inprogress: inprogress,
-                        upcoming: upcoming
+                        completed: values[0],
+                        inprogress: values[1],
+                        upcoming: values[2]
                     }
                 })
-            })
-            
+            })        
         } catch (error) {
             res.status(500).json({
                 error: true,
