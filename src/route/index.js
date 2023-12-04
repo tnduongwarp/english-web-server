@@ -5,7 +5,8 @@ import forgotPassWord from './forgot-pw.js';
 import category from './category.js';
 import course from './course.js'
 import lesson from './lesson.js';
-import word from './word.js'
+import word from './word.js';
+import quiz from './quiz.js'
 export default function route(app){
     app.use(function(req, res, next) {
         res.header(
@@ -22,4 +23,5 @@ export default function route(app){
       app.use('/lesson', lesson);
       app.use('/course',course);
       app.use('/word', word);
+      app.use('/quiz', quiz);
 }

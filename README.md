@@ -35,3 +35,21 @@ body: {
 body: {
     "refreshToken":"eyjdhfjdfh..."
 }
+
+# lấy các lesson trong 1 course ( course là các mục trên thanh sidebar)
+- POST localhost:3000/lesson/get-all-lesson
+body:{
+    courseId: 1,
+    userId: 1
+}
+
+# lấy quiz của lesson bằng lesson id
+- GET localhost:3000/lesson/get-quiz/:id
+# update status của lesson khi học xong hoặc đang học dở:
+- POST localhost:3000/lesson/update-status
+body:{
+    status: 'Inprogress' (status là 1 trong 3 loại đã định nghĩa trong app constant),
+    updateAt: new Date(),
+    lessonId: 1,
+    userId: 1
+}
