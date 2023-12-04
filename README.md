@@ -40,7 +40,8 @@ body: {
 - POST localhost:3000/lesson/get-all-lesson
 body:{
     courseId: 1,
-    userId: 1
+    userId: 1,
+    categoryId: 1
 }
 
 # lấy quiz của lesson bằng lesson id

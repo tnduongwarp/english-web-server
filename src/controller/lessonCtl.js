@@ -8,10 +8,11 @@ class LessonCtl extends BaseController{
     }
     getByCourseId = async (req,res) => {
         try {
-            const { courseId, userId}  = req.body;
+            const { courseId, userId, categoryId}  = req.body;
             const allLessons = await this.modelName.findAll({
                 where: {
-                    courseId: courseId
+                    courseId: courseId,
+                    categoryId: categoryId
                 }
             });
             let allPromise = [];
