@@ -5,6 +5,7 @@ const router = express.Router();
 //test without authorize
 router.post('/get-all-lesson',[authorization.verifyToken, authorization.isUser],lessonCtl.getByCourseId);
 router.get('/get-quiz/:id',[authorization.verifyToken, authorization.isUser], lessonCtl.getQuizForLessonByLessonId);
-router.post('/update-status',[authorization.verifyToken, authorization.isUser], lessonCtl.updateUserLessonStatus)
+router.post('/update-status',[authorization.verifyToken, authorization.isUser], lessonCtl.updateUserLessonStatus);
+router.post('/get-data-for-home-page', [authorization.verifyToken, authorization.isUser], lessonCtl.getProcessInfo)
 export default router;
 //,[authorization.verifyToken, authorization.isUser]

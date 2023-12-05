@@ -110,7 +110,64 @@ class LessonCtl extends BaseController{
                 data: questions,
                 message: 'Get successfully'
             })
-        } catch (error) {
+        } catch (err) {
+            res.status(500).json({
+                error: true,
+                message: err.message
+            })
+        }
+    }
+
+    getProcessInfo = async (req, res) => {
+        const { categoryId, userId } = req.body;
+        try{
+            const allLessons = await db.Lesson.findAll({
+                where:{categoryId: categoryId}
+            });
+            const responseData = [];
+            const vocabularyIds = allLessons.filter(item => (item.courseId === 1)).map(item => item.id);
+            const readingIds = allLessons.filter(item => (item.courseId === 2)).map(item => item.id);
+            const listeningIds = allLessons.filter(item => (item.courseId === 3)).map(item => item.id);
+            const vocabularyProcess = db.user_lesson_process.findAll({
+                where: {userId: userId, lessonId: vocabularyIds}
+            });
+            const readingProcess = db.user_lesson_process.findAll({
+                where: {userId: userId, lessonId: readingIds}
+            })
+            const listeningProcess = db.user_lesson_process.findAll({
+                where: {userId: userId, lessonId: listeningIds}
+            });
+            await Promise.all([vocabularyProcess, readingProcess, listeningProcess])
+            .then( data => {
+                console.log(data[1].length)
+                for(let i = 0; i< data.length; i++){
+                   
+                    const obj = data[i].length ?  {
+                        completed: data[i].filter(item => (item.completedStatus === AppConstant.COMPLETE_STATUS)).length,
+                        total: 0,
+                        next: allLessons.filter(item => (
+                            item.id === data[i].filter(item => (item.completedStatus === AppConstant.INPROGRESS_STATUS))[0].lessonId
+                        ))
+                    } : {
+                        completed: 0,
+                        total: 0,
+                        next:[]
+                    };
+                    responseData.push(obj);
+                }
+            })
+            .catch(err => console.log(err));
+            responseData[0].total = vocabularyIds.length;
+            responseData[1].total = readingIds.length;
+            responseData[2].total = listeningIds.length
+            //console.log(responseData)
+            res.status(200).json({
+                error: false,
+                data: responseData,
+                message: 'Get successfully'
+            })
+        }catch(err){
+            console.log(err)
             res.status(500).json({
                 error: true,
                 message: err.message

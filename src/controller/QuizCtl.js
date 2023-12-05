@@ -23,7 +23,7 @@ class QuizCtl extends BaseController{
         console.log(err);
         res.status(500).json({
             error: true,
-            message: error.message
+            message: err.message
         })
     }
     

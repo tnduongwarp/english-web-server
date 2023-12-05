@@ -123,6 +123,7 @@ const authCtl = {
             idToken: token,
         });
         const googleData = ticket.getPayload();
+        console.log(googleData)
         const user = await db.User.findOne({
             where: {
                      email:googleData.email 
@@ -141,7 +142,7 @@ const authCtl = {
         }else{
             const salt = await bcrypt.genSalt(Number(process.env.SALT));
             const newUser = await db.User.create({
-                username: googleData.username,
+                username: googleData.name,
                 password: bcrypt.hashSync(googleData.sub, salt),
                 email: googleData.email,
                 registration_date: new Date(),
