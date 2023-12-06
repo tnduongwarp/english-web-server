@@ -26,14 +26,14 @@ class LessonCtl extends BaseController{
                 allPromise.push(user_lesson_process);
             }
             let lessonPromises = [];
+            let upcoming = [];
             await Promise.all(allPromise).then((values) => {
                 const completed = values.filter((it) => {return it?.completedStatus === AppConstant.COMPLETE_STATUS}).map(item => item.lessonId);
                 const inprogress = values.filter((it) => {return it?.completedStatus === AppConstant.INPROGRESS_STATUS}).map(item => item.lessonId);
-                const upcoming = values.filter((it) => {return it?.completedStatus === AppConstant.NEW_STATUS}).map(item => item.lessonId);
+                upcoming = allLessons.filter(item => (!(completed.includes(item.id) || inprogress.includes(item.id))));
                 console.log(upcoming)
                 lessonPromises.push(db.Lesson.findAll({ where: { id: completed}}));
                 lessonPromises.push(db.Lesson.findAll({ where: { id: inprogress}}));
-                lessonPromises.push(db.Lesson.findAll({ where: { id: upcoming}}));
                     
             })
             Promise.all(lessonPromises).then(values => {
@@ -43,7 +43,7 @@ class LessonCtl extends BaseController{
                     lessons: {
                         completed: values[0],
                         inprogress: values[1],
-                        upcoming: values[2]
+                        upcoming: upcoming
                     }
                 })
             })        

@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/get-all-lesson',[authorization.verifyToken, authorization.isUser],lessonCtl.getByCourseId);
 router.get('/get-quiz/:id',[authorization.verifyToken, authorization.isUser], lessonCtl.getQuizForLessonByLessonId);
 router.post('/update-status',[authorization.verifyToken, authorization.isUser], lessonCtl.updateUserLessonStatus);
-router.post('/get-data-for-home-page', [authorization.verifyToken, authorization.isUser], lessonCtl.getProcessInfo)
+router.post('/get-data-for-home-page', [authorization.verifyToken, authorization.isUser], lessonCtl.getProcessInfo);
+router.get('/:id',[authorization.verifyToken, authorization.isUser], lessonCtl.getById)
 export default router;
 //,[authorization.verifyToken, authorization.isUser]

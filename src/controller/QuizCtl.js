@@ -2,7 +2,7 @@ import BaseController from "./baseCtl";
 import db from '../models'
 class QuizCtl extends BaseController{
     constructor(){
-        super(db.Course)
+        super(db.Quiz)
     }
    getByLessonId = async (req, res) => {
     try{
