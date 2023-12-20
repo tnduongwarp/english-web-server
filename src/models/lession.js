@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.STRING,
     videoUrl: DataTypes.STRING,
     wordIds: DataTypes.STRING,
-    sequenceOrder: DataTypes.INTEGER,
+    categoryId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Lesson',

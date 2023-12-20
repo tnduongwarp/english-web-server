@@ -78,7 +78,7 @@ const authCtl = {
                 username: req.body.username,
                 password: bcrypt.hashSync(req.body.password, salt),
                 email: req.body.email,
-                registration_date: new Date(),
+                registration_date: new Date('2023-12-2'),
                 profile_picture: req.body?.profile_picture,
                 role: req.body.role
             })

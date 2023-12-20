@@ -59,23 +59,41 @@ class LessonCtl extends BaseController{
         try{
             const { status, updateAt, lessonId, userId} = req.body;
             if(status === AppConstant.COMPLETE_STATUS || status ===AppConstant.INPROGRESS_STATUS ){
-                let dataUpdate = await db.user_lesson_process.update(
-                    { 
-                        completedStatus: status,
-                        completedDate: updateAt
-                    },
-                    {
-                        where: {
-                            userId: userId,
-                            lessonId: lessonId
+                let record = await db.user_lesson_process.findOne({
+                    where: { userId: userId, lessonId: lessonId}
+                });
+                if(record){
+                    let dataUpdate = await db.user_lesson_process.update(
+                        { 
+                            completedStatus: status,
+                            completedDate: updateAt
+                        },
+                        {
+                            where: {
+                                userId: userId,
+                                lessonId: lessonId
+                            }
                         }
-                    }
-                );
-                res.status(200).json({
-                    error: false,
-                    message: 'update successfully',
-                    user_lesson_process: dataUpdate
-                })
+                    );
+                    res.status(200).json({
+                        error: false,
+                        message: 'update successfully',
+                        user_lesson_process: dataUpdate
+                    })
+                }
+                else{
+                    let dataCreate = await db.user_lesson_process.create({
+                        userId,
+                        lessonId,
+                        completedStatus: status,
+                        completedDate: new Date()
+                    })
+                    res.status(200).json({
+                        error: false,
+                        message: 'update create successfully',
+                        user_lesson_process: dataCreate
+                    })
+                }
             }
             else res.status(400).json({
                 error: true,
@@ -139,15 +157,15 @@ class LessonCtl extends BaseController{
             });
             await Promise.all([vocabularyProcess, readingProcess, listeningProcess])
             .then( data => {
-                console.log(data[1].length)
+                console.log(data[0])
                 for(let i = 0; i< data.length; i++){
-                   
+                    
                     const obj = data[i].length ?  {
                         completed: data[i].filter(item => (item.completedStatus === AppConstant.COMPLETE_STATUS)).length,
                         total: 0,
                         next: allLessons.filter(item => (
-                            item.id === data[i].filter(item => (item.completedStatus === AppConstant.INPROGRESS_STATUS))[0].lessonId
-                        ))
+                            item.id === data[i].filter(item => (item.completedStatus === AppConstant.INPROGRESS_STATUS))[0]?.lessonId
+                        )) || []
                     } : {
                         completed: 0,
                         total: 0,
@@ -171,6 +189,65 @@ class LessonCtl extends BaseController{
             res.status(500).json({
                 error: true,
                 message: err.message
+            })
+        }
+    }
+    getLessonByCourseIdAndCategoryId = async (req, res) => {
+        try {
+            const { courseId, categoryId}  = req.body;
+            const allLessons = await this.modelName.findAll({
+                where: {
+                    courseId: courseId,
+                    categoryId: categoryId
+                }
+            });
+            res.status(200).json({
+                error: false,
+                data: allLessons,
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                error: true,
+                message: err.message
+            })
+        }
+    }
+    addNewListeningLesson = async (req, res) => {
+        try {
+            const {categoryId, title, content, url} = req.body;
+            let existLesson = await this.modelName.findOne({
+                where: {
+                    categoryId: categoryId,
+                    title: title,
+                    content: content
+                }
+            });
+            if(existLesson){
+                res.status(500).json({
+                    error: true,
+                    message: 'You had added this lesson, Please check again!'
+                })
+                return;
+            }
+            let newLesson = await this.modelName.create({
+                categoryId: categoryId,
+                courseId: 3,
+                type: 3,
+                title: title,
+                content: content,
+                videoUrl:url
+            });
+            res.status(200).json({
+                error: false,
+                data: newLesson,
+                mesage: 'add success'
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                error: true,
+                message: error.message
             })
         }
     }

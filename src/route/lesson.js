@@ -7,6 +7,8 @@ router.post('/get-all-lesson',[authorization.verifyToken, authorization.isUser],
 router.get('/get-quiz/:id',[authorization.verifyToken, authorization.isUser], lessonCtl.getQuizForLessonByLessonId);
 router.post('/update-status',[authorization.verifyToken, authorization.isUser], lessonCtl.updateUserLessonStatus);
 router.post('/get-data-for-home-page', [authorization.verifyToken, authorization.isUser], lessonCtl.getProcessInfo);
-router.get('/:id',[authorization.verifyToken, authorization.isUser], lessonCtl.getById)
+router.get('/:id',[authorization.verifyToken, authorization.isUser], lessonCtl.getById);
+router.post('/list-lesson-for-admin',[authorization.verifyToken, authorization.isAdmin], lessonCtl.getLessonByCourseIdAndCategoryId)
+router.post('/add-listening',[authorization.verifyToken, authorization.isAdmin], lessonCtl.addNewListeningLesson)
 export default router;
 //,[authorization.verifyToken, authorization.isUser]

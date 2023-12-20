@@ -52,12 +52,46 @@ let userCtl = {
             }
             
         }catch(err){
-            res.status(401).json({
+            res.status(402).json({
                 error: true,
                 message: 'token is expired'
             })
         }
         
+    },
+    getAllUser : async (req, res) => {
+        try{
+            let users = await db.User.findAll({})
+            if(users){
+                res.status(200).json({
+                    error: false,
+                    data: users
+                })
+            }
+            
+        }catch(err){
+            res.status(500).json({
+                error: true,
+                message: 'Internal server error'
+            })
+        }
+    },
+    deleteUser : async(req,res) => {
+        try {
+            const id = req.params.id;
+            let userDelete = await db.User.destroy({
+                where: { id: id}
+            })
+            if(userDelete) res.status(200).json({
+                error: false,
+                message: 'Delete successfully'
+            })
+        } catch (error) {
+            res.status(500).json({
+                error: true,
+                message: 'Internal server error'
+            })
+        }
     }
     
     

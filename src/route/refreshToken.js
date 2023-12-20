@@ -24,15 +24,15 @@ router.post("/", async (req, res) => {
                 accessToken,
                 message: "Access token created successfully",
             });
-        }else res.status(400).json({
+        }else res.status(405).json({
             err:true,
             message: "Invalid RefreshToken"
         })  
     } catch(err){
-        // console.log(err)
-        res.status(400).json({
+         console.log(err)
+        res.status(405).json({
             error: true,
-            message: err?.message?.message
+            message: err?.message
         })
     }
    

@@ -36,8 +36,32 @@ const isUser = (req, res, next) => {
     }
 
 }
+
+const isAdmin = (req, res, next) => {
+
+    if (req.user.role === "admin") {
+        next();
+        return;
+    }
+    else {
+        res.status(403).json({ error: true, message: "Required Admin Role!" });
+        return;
+    }
+
+}
+const isUserOrAdmin = (req, res, next) => {
+    if (req.user.role === "admin" || req.user.role === "user") {
+        next();
+        return;
+    }
+    else {
+        res.status(403).json({ error: true, message: "Required A Role!" });
+        return;
+    }
+}
 const authorization = {
     verifyToken,
-    isUser
+    isUser,
+    isAdmin, isUserOrAdmin
 }
 export default authorization;
