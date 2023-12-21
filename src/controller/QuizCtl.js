@@ -28,5 +28,30 @@ class QuizCtl extends BaseController{
     }
     
    }
+
+   addQuiz = async (req,res) => {
+    try {
+        const {questions, lessonId} = req.body;
+        console.log(questions)
+        let insertQues = await db.Question.bulkCreate(questions);
+        console.log(insertQues)
+        insertQues = insertQues.map(it => (it.id)).join(',');
+        let insertQuiz =await this.modelName.create({
+            lessonId,
+            questionIds: insertQues
+        });
+        res.status(200).json({
+            error: false,
+            mesage: 'add quiz successfully',
+            quiz: insertQuiz
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: true,
+            message: err.message
+        })
+    }
+   }
 }
 module.exports = new QuizCtl();

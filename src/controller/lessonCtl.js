@@ -251,5 +251,82 @@ class LessonCtl extends BaseController{
             })
         }
     }
+
+    addNewReadingLesson = async (req, res) => {
+        try {
+            const {categoryId, title, content} = req.body;
+            let existLesson = await this.modelName.findOne({
+                where: {
+                    categoryId: categoryId,
+                    title: title,
+                    content: content
+                }
+            });
+            if(existLesson){
+                res.status(500).json({
+                    error: true,
+                    message: 'You had added this lesson, Please check again!'
+                })
+                return;
+            }
+            let newLesson = await this.modelName.create({
+                categoryId: categoryId,
+                courseId: 2,
+                type: 2,
+                title: title,
+                content: content,
+            });
+            res.status(200).json({
+                error: false,
+                data: newLesson,
+                mesage: 'add success'
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+    }
+
+    addNewVocabularyLesson = async (req, res) => {
+        try {
+            const {categoryId, title, content, wordIds} = req.body;
+            let existLesson = await this.modelName.findOne({
+                where: {
+                    categoryId: categoryId,
+                    title: title,
+                    content: content
+                }
+            });
+            if(existLesson){
+                res.status(500).json({
+                    error: true,
+                    message: 'You had added this lesson, Please check again!'
+                })
+                return;
+            }
+            let newLesson = await this.modelName.create({
+                categoryId: categoryId,
+                courseId: 1,
+                type: 1,
+                title: title,
+                content: content,
+                wordIds: wordIds
+            });
+            res.status(200).json({
+                error: false,
+                data: newLesson,
+                mesage: 'add success'
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+    }
 }
 module.exports = new LessonCtl();
