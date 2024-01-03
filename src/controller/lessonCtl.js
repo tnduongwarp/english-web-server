@@ -292,7 +292,7 @@ class LessonCtl extends BaseController{
 
     addNewVocabularyLesson = async (req, res) => {
         try {
-            const {categoryId, title, content, wordIds} = req.body;
+            const {categoryId, title, content, words} = req.body;
             let existLesson = await this.modelName.findOne({
                 where: {
                     categoryId: categoryId,
@@ -307,13 +307,16 @@ class LessonCtl extends BaseController{
                 })
                 return;
             }
+            let insertWords =await db.Word.bulkCreate(words);
+            let wordIds = insertWords.map(item => item.id).join(',');
+            console.log(wordIds)
             let newLesson = await this.modelName.create({
                 categoryId: categoryId,
                 courseId: 1,
                 type: 1,
                 title: title,
                 content: content,
-                wordIds: wordIds
+                wordIds
             });
             res.status(200).json({
                 error: false,

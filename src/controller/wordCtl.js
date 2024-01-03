@@ -25,6 +25,7 @@ class WordCtl extends BaseController{
             });
           }
       }
+      
     
 }
 module.exports = new WordCtl();
