@@ -331,5 +331,26 @@ class LessonCtl extends BaseController{
             })
         }
     }
+
+    deleteLessonById = async (req,res) => {
+        try {
+            const id = req.params.id;
+            if(id){
+                await this.modelName.destroy({
+                    where:{id:id}
+                });
+                res.status(200).json({
+                    error: false,
+                    mesage: 'delete success'
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({
+                error: true,
+                message: error.message
+            })
+        }
+    }
 }
 module.exports = new LessonCtl();

@@ -11,6 +11,7 @@ router.get('/:id',[authorization.verifyToken, authorization.isUser], lessonCtl.g
 router.post('/list-lesson-for-admin',[authorization.verifyToken, authorization.isAdmin], lessonCtl.getLessonByCourseIdAndCategoryId);
 router.post('/add-listening',[authorization.verifyToken, authorization.isAdmin], lessonCtl.addNewListeningLesson);
 router.post('/add-reading',[authorization.verifyToken, authorization.isAdmin], lessonCtl.addNewReadingLesson);
-router.post('/add-vocabulary', [authorization.verifyToken, authorization.isAdmin], lessonCtl.addNewVocabularyLesson)
+router.post('/add-vocabulary', [authorization.verifyToken, authorization.isAdmin], lessonCtl.addNewVocabularyLesson);
+router.post('/delete/:id', [authorization.verifyToken, authorization.isAdmin], lessonCtl.deleteLessonById)
 export default router;
 //,[authorization.verifyToken, authorization.isUser]
