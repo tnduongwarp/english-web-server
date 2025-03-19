@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Lessons', {
+    await queryInterface.createTable('user_questions', {
 
       id: {
         allowNull: false,
@@ -10,24 +10,28 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      courseId: {
+      userId: {
         type: Sequelize.INTEGER
       },
-      title: {
-        type: Sequelize.STRING
-      },
-      content: {
-        type: Sequelize.TEXT
-      },
-      videoUrl: {
-        type: Sequelize.STRING
-      },
-      sequenceOrder: {
+      quizId: {
         type: Sequelize.INTEGER
+      },
+      questionId: {
+        type: Sequelize.INTEGER
+      },
+      userAnswer: {
+        type: Sequelize.STRING
+      },
+      dateCompleted: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      isCorrect: {
+        type: Sequelize.BOOLEAN
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Lessons');
+    await queryInterface.dropTable('user_questions');
   }
 };

@@ -12,9 +12,8 @@ router.post("/", async (req, res) => {
                 .json({ error: true, message: error.details[0].message });
     
         const {tokenDetails} = await verifyRefreshToken(req.body.refreshToken);
-        console.log(tokenDetails);
         if(tokenDetails){
-            const payload = { id: tokenDetails.id, roles: tokenDetails.role };
+            const payload = { userId: tokenDetails.userId, role: tokenDetails.role };
             const accessToken = jwt.sign(
                 payload,
                 process.env.TOKEN_KEY,
@@ -25,13 +24,16 @@ router.post("/", async (req, res) => {
                 accessToken,
                 message: "Access token created successfully",
             });
-        }else res.status(400).json({
+        }else res.status(405).json({
             err:true,
             message: "Invalid RefreshToken"
         })  
     } catch(err){
-        console.log(err)
-        res.status(400).json(err)
+         console.log(err)
+        res.status(405).json({
+            error: true,
+            message: err?.message
+        })
     }
    
 });

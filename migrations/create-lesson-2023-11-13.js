@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Categories', {
+    await queryInterface.createTable('Lessons', {
 
       id: {
         allowNull: false,
@@ -10,18 +10,30 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      courseId: {
+        type: Sequelize.INTEGER
+      },
+      type: {
+        type: Sequelize.INTEGER
+      },
+      title: {
         type: Sequelize.STRING
       },
-      isActive: {
+      content: {
+        type: Sequelize.TEXT
+      },
+      videoUrl: {
         type: Sequelize.STRING
       },
-      isActive: {
+      wordIds: {
         type: Sequelize.STRING
       },
+      sequenceOrder: {
+        type: Sequelize.INTEGER
+      }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Categories');
+    await queryInterface.dropTable('Lessons');
   }
 };

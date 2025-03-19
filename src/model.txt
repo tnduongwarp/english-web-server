@@ -1,0 +1,48 @@
+Category: {
+    id: int,
+    name: string
+}
+
+course: {
+    id: int,
+    name: string,
+    description: string //học từ vựng/học ngữ pháp,...,
+    level: string //beginner/medium/advance,...,
+    createDate: string,
+    categoryId: int,
+}
+
+lesson: {
+    id: int,
+    courseId: int,
+    type: int //1 ứng với học từ vựng, 2 ứng với học ngữ pháp chẳng hạn, ví dụ học từ vựng thì sẽ không có videoUrl thì cho videoUrl = null
+    content: string,
+    videoUrl: string // cái này ông lưu video của nó trong thư mục public để trong src của FE sau đó lưu đường dẫn đến file đó vào đây
+    wordIds: string //lưu dạng chuỗi stirng gồm các wordId cách nhau bằng đấu ','
+    sequenceOrder: int //cái này là để sắp xếp thứ tự bài học, ví dụ bài học 1 sẽ có sequenceOrder nhỏ hơn bài học 2
+}
+
+quiz: {
+    id: int,
+    courseId: int,
+    lessonId: int,
+    name: string,
+    questionIds: string //lưu dưới dạng chuỗi các id ngăn cách nhau bởi dấy ','
+}
+question: {
+    id: int,
+    type: string // multiple-choice/enter,
+    answer: string // A/B/C/D/đáp án của câu hỏi điền đáp án,
+    content: text // nội dung câu hỏi
+    A: string //nội dung đáp án A,
+    B: string,,
+    C: string,
+    D: string
+}
+
+word: {
+    id: int,
+    audioUrl: string,
+    original: string,
+    meaning: string
+}

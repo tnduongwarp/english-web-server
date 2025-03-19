@@ -17,7 +17,7 @@ const verifyRefreshToken =  async (refreshToken) => {
            
     }  
     catch(err) {
-            return Promise.reject({ error: true, message: err })
+            return Promise.reject({ error: true, message: 'Invalid refresh token' })
         }
 }
     

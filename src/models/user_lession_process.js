@@ -16,8 +16,9 @@ module.exports = (sequelize, DataTypes) => {
   UserLessonProcess.init({
     userId: DataTypes.INTEGER,
     lessonId: DataTypes.INTEGER,
-    completedDate: DataTypes.DATE,
-    conpletedStatus: DataTypes.STRING
+    completedStatus: DataTypes.STRING, // Inprogress, Completed,New
+    completedDate: DataTypes.DATE
+    
   }, {
     sequelize,
     modelName: 'user_lesson_process',

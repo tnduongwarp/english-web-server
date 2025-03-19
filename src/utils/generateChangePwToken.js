@@ -1,19 +1,14 @@
 import jwt from "jsonwebtoken";
 import db from '../models/index.js'
-const generateTokens = async (user) => {
+const generateChangePwToken = async (email) => {
     try {
-        const payload = { userId: user.id, role: user.role };
-        const accessToken = jwt.sign(
+        const payload = { email: email, date: new Date() };
+        const changePasswordToken = jwt.sign(
             payload,
             process.env.TOKEN_KEY,
-            { expiresIn: "90m" }
+            { expiresIn: "5m" }
         );
-        const refreshToken = jwt.sign(
-            payload,
-            process.env.REFRESH_TOKEN_PRIVATE_KEY,
-            { expiresIn: "30d" }
-        );
-
+        const user = await db.User.findOne({ where: {email: email}});
         const userToken = await db.user_token.findOne({ where:{userId: user.id }});
         if (userToken) {
             await db.user_token.destroy({
@@ -24,14 +19,14 @@ const generateTokens = async (user) => {
         }
         const newUserToken = {
             userId: user.id,
-            token: refreshToken,
+            token: changePasswordToken,
             createAt: new Date()
         };
         await db.user_token.create(newUserToken);
-        return Promise.resolve({ accessToken, refreshToken });
+        return Promise.resolve({ changePasswordToken });
     } catch (err) {
-        return Promise.reject(err);
+        return Promise.reject({message: 'Internal Server Error'});
     }
 };
 
-export default generateTokens;
+export default generateChangePwToken;

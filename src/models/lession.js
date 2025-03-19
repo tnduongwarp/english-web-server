@@ -15,10 +15,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   Lesson.init({
     courseId: DataTypes.INTEGER,
+    type: DataTypes.INTEGER,
     title: DataTypes.STRING,
     content: DataTypes.STRING,
     videoUrl: DataTypes.STRING,
-    sequenceOrder: DataTypes.INTEGER,
+    wordIds: DataTypes.STRING,
+    categoryId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Lesson',
